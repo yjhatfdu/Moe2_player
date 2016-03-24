@@ -118,11 +118,9 @@ module Moe2{
             this.videoEl.load();
             this.videoEl.addEventListener('playing',function(){
                 this.dispatchEvent(PlayerEvent.play);
-                this.isPlaying=true;
             }.bind(this));
             this.videoEl.addEventListener('pause',function(){
                 this.dispatchEvent(PlayerEvent.pause);
-                this.isPlaying=false;
             }.bind(this));
             this.videoEl.addEventListener('error',function(){
                 this.dispatchEvent(PlayerEvent.error)
@@ -595,7 +593,7 @@ module Moe2{
                 playIconElDiv.addEventListener(this.upEvent,function(e){
                     e.preventDefault();
                     e.stopPropagation();
-                    this.tooglePlay();
+                    this.tooglePlay(e);
                     this.lastActive=Date.now();
                 }.bind(this),true);
                 this.fullScreenIcon.addEventListener(this.upEvent,this.toogleFS.bind(this),true);
