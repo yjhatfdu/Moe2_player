@@ -11,6 +11,7 @@
 - 内部实现了弹幕发送和更新的相关方法（基于socket.io,不过暂时没有开放就没有完全集成）
 
 ### Demo:
+##### https://yjhatfdu.github.io/Moe2_player/dist/
 ##### https://moe2.tv
 ##### https://jp.moe2.tv
 
