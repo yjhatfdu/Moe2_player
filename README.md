@@ -33,6 +33,12 @@ player.initVideo('视频的路径.mp4');
 player.loadDanmaku('弹幕文件路径.xml','bilibili');
 </script>
 ```
+### 手动编译
+```shell
+npm install
+npm run build
+```
+
 ### 接口文档
 - 待完善
 
