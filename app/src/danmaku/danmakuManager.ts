@@ -204,7 +204,6 @@ module Moe2 {
                     this.socket.on('newdmk',function(item){
                         this.dmkManager.layoutManager.insert(new DanmakuItem(this.dmkManager,item['content'],item['time'],item['type'],'#'+item['color'].toString('16'),item.fontSize))
                     }.bind(this))
-
                 }
             send(dmk){
                 var newdmk={};
