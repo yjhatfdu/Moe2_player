@@ -19,7 +19,6 @@
     <script src="src/danmaku/LayoutManager.js"></script>
     <script src="src/danmaku/glHelper.js"></script>
     <script src="lib/gl-matrix.js"></script>
-    <script src="lib/flv.js"></script>
     <script src="src/danmaku/Renderer.js"></script>
     <script src="lib/webvr_polyfill.js"></script>
     <!-- endbuild -->
@@ -36,7 +35,8 @@
 <script>
     var player;
     player=new Moe2.Player(document.querySelector('.player-container'),'Big buck bunny');
-    player.initFlv('http://202.121.199.235:9000/live/livestream.flv');
+    player.initVideo('../testdata/bbb.mp4');
+    player.loadDanmaku('../testdata/test.xml')
 </script>
 </body>
 </html>
