@@ -636,11 +636,7 @@ module Moe2{
                         this.playIconEl.classList.remove('fa-play');
                         this.playIconEl.classList.add('fa-pause');
                     }
-                    if (!this.player.isLive) {
-                        this.durationEl.innerHTML='/'+this.parseTime(this.player.duration);
-                    } else {
-                        this.durationEl.innerHTML = '/' + this.parseTime(0);
-                    }
+                    this.durationEl.innerHTML='/'+this.parseTime(!this.player.isLive ? this.player.duration : 0);
                 }.bind(this));
                 this.player.addEventListener(PlayerEvent.pause,function(){
                     this.playIconEl.classList.remove('fa-pause');
