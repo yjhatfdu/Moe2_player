@@ -3,6 +3,7 @@
  */
     ///<reference path='../danmaku/danmakuManager.ts'/>
 module Moe2{
+    import DanmakuItem = Moe2.Danmaku.DanmakuItem;
     var DEBUG=false;
 
     function log(info){
@@ -69,6 +70,7 @@ module Moe2{
         fullscreenState:boolean;
         duration:number;
         touchMode:boolean;
+        isLive:boolean;
 
         seekingTime:number=0;
 
@@ -246,8 +248,35 @@ module Moe2{
         initVideo(src:string){
             this.videoEl.src=src;
         }
+
+        initFlv(flvUrl: string) {
+            if (!window['flvjs']) {
+                console.log('Moe2Player requires flv.js to support live streaming.');
+                return;
+            }
+            const flvJS = window['flvjs'] as any;
+            if (flvJS.isSupported()) {
+                const sourceElement = this.videoEl;
+                const flvPlayer = flvJS.createPlayer({
+                    type: 'flv',
+                    url: flvUrl
+                });
+                flvPlayer.attachMediaElement(sourceElement);
+                flvPlayer.load();
+                this.isLive = true;
+            } else {
+                console.log('flv.js is not supported in current browser.');
+            }
+        }
+
         loadDanmaku(src,type='bilibili'){
             this.danmakuManager.loadDanmaku(src,type)
+        }
+
+        pushDanmaku(content, color='#ffffff', type=0, fontSize=28) {
+            const time = this.videoEl.currentTime + 0.1;
+            const danmaku = new Moe2.Danmaku.DanmakuItem(this.danmakuManager, content, time, type, color, fontSize);
+            this.danmakuManager.sendDanmaku(danmaku);
         }
 
         play(){
@@ -258,13 +287,16 @@ module Moe2{
             this.videoEl.pause()
         }
         seek(time){
+            if (this.isLive) return;
             this.videoEl.currentTime=time;
             this.play()
         }
         seeked(time){
+            if (this.isLive) return;
             this.videoEl.currentTime=time;
         }
         seeking(time){
+            if (this.isLive) return;
             if(!this.touchMode){
                 this.dispatchEvent(PlayerEvent.seeking,time)
             }
@@ -335,9 +367,8 @@ module Moe2{
                 document['mozCancelFullScreen']()
             }
             this.danmakuManager.resize()
-
-
         }
+
         get bufferRange(){
             if(this.videoEl.buffered.length==0){
                 return[0,0]
@@ -601,9 +632,11 @@ module Moe2{
                 this.icon3DEl.addEventListener(this.upEvent,this.toogle3D.bind(this),true);
                 this.vrIconEl.addEventListener(this.upEvent,this.toogleVR.bind(this),true);
                 this.player.addEventListener(PlayerEvent.play,function(){
-                    this.playIconEl.classList.remove('fa-play');
-                    this.playIconEl.classList.add('fa-pause');
-                    this.durationEl.innerHTML='/'+this.parseTime(this.player.duration);
+                    if (this.player.isPlaying) {
+                        this.playIconEl.classList.remove('fa-play');
+                        this.playIconEl.classList.add('fa-pause');
+                    }
+                    this.durationEl.innerHTML='/'+this.parseTime(!this.player.isLive ? this.player.duration : 0);
                 }.bind(this));
                 this.player.addEventListener(PlayerEvent.pause,function(){
                     this.playIconEl.classList.remove('fa-pause');
@@ -613,11 +646,6 @@ module Moe2{
 
 
                 this.element.addEventListener(this.upEvent,this.detectDbclick.bind(this),false);
-
-
-
-
-
 
                 if(!touchMode){
                     this.element.addEventListener('mousemove',function(e){
@@ -709,13 +737,18 @@ module Moe2{
                 }
             }
 
-
-
             updateTime(){
-                this.progressBar.currentValue=this.player.currentTime/this.player.duration;
-                this.progressBar.bufferRange=this.player.bufferRange;
-             this.currentTimeEl.innerHTML=this.parseTime(this.player.currentTime)
+                 const isLive = this.player.isLive;
+                 if (!isLive) {
+                     this.progressBar.currentValue= this.player.currentTime/this.player.duration;
+                     this.progressBar.bufferRange=this.player.bufferRange;
+                 } else {
+                     this.progressBar.currentValue = 0;
+                     this.progressBar.bufferRange = [];
+                 }
+                this.currentTimeEl.innerHTML=this.parseTime(this.player.currentTime)
             }
+
             tooglePlay(e){
                 if(e){
                     e.stopPropagation();
