@@ -352,3 +352,33 @@ div.opacity:hover{
 .time-indicator .total-time{
     color:rgb(43, 217, 234);
 }
+
+.control-panel form input {
+    width: 35%;
+    min-width: 200px;
+    max-width: 300px;
+    border: none;
+    height: 26px;
+    padding-left: 10px;
+    border-radius: 3px;
+    outline: none;
+}
+.control-panel form {
+    padding-top: 5px;
+}
+.control-panel form button {
+    margin-left: 15px;
+    width: 80px;
+    border: none;
+    outline: none;
+    height: 30px;
+    vertical-align: middle;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+.control-panel form button:hover {
+    background-color: skyblue;
+    color: white;
+}

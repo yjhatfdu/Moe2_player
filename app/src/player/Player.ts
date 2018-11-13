@@ -587,6 +587,7 @@ export class ControlLayer extends EventBase {
     private fullScreenIcon: HTMLElement;
     private danmakuIconEl: HTMLElement;
     private icon3DEl;
+    private dmkInput;
     private vrIconEl;
     private touchMode: boolean;
     private downEvent: string;
@@ -634,7 +635,7 @@ export class ControlLayer extends EventBase {
         this.controlPanelEl.appendChild(timeind);
         let inputBar = document.createElement('form');
         inputBar.innerHTML = '<input type="text"><button type="submit">发送</button>';
-        let dmkInput: any = inputBar.querySelector('input');
+        let dmkInput: any =this.dmkInput== inputBar.querySelector('input');
         let sendButton = inputBar.querySelector('button');
         inputBar.addEventListener('submit', e => {
             e.preventDefault();
@@ -749,6 +750,9 @@ export class ControlLayer extends EventBase {
     }
 
     hide() {
+        if(this.dmkInput==document.activeElement){
+            return
+        }
         this.element.classList.add('opacity');
         this.visible = false
     }
