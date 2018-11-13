@@ -7,14 +7,14 @@
 <script src="dist/moe2player.js"></script>
 <body style="margin: 0">
 
-<div class="player-container" style="position: fixed;">
+<div class="player-container" style="height: 100vh">
 
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
-    let player=new moe2player.Player(document.querySelector('.player-container'),'Big buck bunny');
-    player.initVideo('./testdata/bbb.mp4');
-    player.loadDanmaku('./testdata/test.xml')
+    let player=new moe2player.Player(document.querySelector('.player-container'),'实时广播');
+    player.initHls('http://127.0.0.1/hls/test.m3u8');
+    setInterval(()=>player.pushDanmaku('test'),1000)
 </script>
 </body>
 

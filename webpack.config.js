@@ -1,6 +1,4 @@
 const path = require('path');
-const DeclarationBundlerPlugin = require('declaration-bundler-webpack-plugin');
-
 module.exports = {
 
     mode: 'development',

@@ -15,5 +15,8 @@
     "build": "rm -rf dist&&tsc --outDir ./dist&&rm dist/**/*.js && rm dist/*.js && rm dist/*.map && rm dist/**/*.map&&webpack"
   },
   "dependencies": {
-  }
+    "@types/hls.js": "^0.10.2",
+    "hls.js": "^0.11.0"
+  },
+  "main": "dist/moe2player.js"
 }

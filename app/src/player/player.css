@@ -173,6 +173,8 @@
 .player-container{
     line-height: 0;
     height: 100%;width: 100%;
+    position: relative;
+    background-color: black;
 
 }
 .player-container.vr{
@@ -192,9 +194,11 @@
 }
 
 .player-container>video{
+    position: absolute;
     width: 100%;
-    z-index:-300;
-    box-shadow: 0 0 10px 1px;
+    top:50%;
+    transform: translateY(-50%);
+    /*box-shadow: 0 0 10px 1px;*/
 }.player-container>canvas{
      width: 100%;
      height:100%;

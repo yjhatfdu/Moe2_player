@@ -33,6 +33,7 @@ export declare class Player extends EventBase {
     buffering: boolean;
     checkBufferState(): void;
     initVideo(src: string): void;
+    initHls(hlsUrl: string, isLive?: boolean): void;
     initFlv(flvUrl: string): void;
     loadDanmaku(src: any, type?: string): void;
     pushDanmaku(content: any, color?: string, type?: number, fontSize?: number): void;
@@ -71,6 +72,7 @@ export declare class ProgressBar extends EventBase {
     touchDown: boolean;
     private downValue;
     constructor(player: Player, touchMode?: boolean);
+    hide(): void;
     getPageX(e: any): any;
     private seeking;
     currentValue: any;
@@ -98,6 +100,7 @@ export declare class ControlLayer extends EventBase {
     constructor(player: Player, title?: any, touchMode?: boolean);
     show(): void;
     hide(): void;
+    setliveMode(): void;
     private parseTime(time);
     lastClickTime: number;
     detectDbclick(e: any): void;

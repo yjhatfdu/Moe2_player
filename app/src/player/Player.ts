@@ -4,6 +4,7 @@ import {EventBase} from "./eventBase";
 
 declare function require(module: string);
 
+declare const Hls: any;
 const style = require('./player.css');
 let DEBUG = false;
 
@@ -83,10 +84,11 @@ export class Player extends EventBase {
         this.controlLayer = new ControlLayer(this, title);
         this.danmakuManager = new DanmakuManager(vid);
         this.danmakuManager.init(this);
+        this.containerEl.appendChild(this.videoEl);
         this.containerEl.appendChild(this.danmakuManager.canvas);
         this.danmakuManager.resize();
         this.containerEl.appendChild(this.controlLayer.element);
-        this.containerEl.appendChild(this.videoEl);
+
         this.touchMode = !!document['createTouch'];
         this.videoEl.addEventListener('play', function () {
             this.dispatchEvent(PlayerEvent.ready)
@@ -105,11 +107,11 @@ export class Player extends EventBase {
         this.videoEl.addEventListener('seeked', function () {
             this.dispatchEvent(PlayerEvent.seeked)
         }.bind(this));
-        this.videoEl.addEventListener('timeupdate', e=>{
+        this.videoEl.addEventListener('timeupdate', e => {
             this.dispatchEvent(PlayerEvent.timeupdate);
             localStorage.setItem('lasttime:' + vid, this.videoEl.currentTime)
         });
-        this.videoEl.addEventListener('loadedmetadata', ()=> {
+        this.videoEl.addEventListener('loadedmetadata', () => {
             this.duration = this.videoEl.duration;
             this.dispatchEvent(PlayerEvent.resize);
             let lasttime = localStorage.getItem('lasttime:' + vid);
@@ -122,7 +124,7 @@ export class Player extends EventBase {
             this.dispatchEvent(PlayerEvent.resize);
             //PlayerEventBus.dispatchEvent('resize');
         }.bind(this));
-        window.addEventListener('keypress', e=> {
+        window.addEventListener('keypress', e => {
             if (!(e.target['nodeName'] == 'TEXTAREA' || e.target['nodeName'] == 'INPUT')) {
                 e.preventDefault();
                 if (e.keyCode == 32) {
@@ -149,11 +151,11 @@ export class Player extends EventBase {
         });
 
 
-        document.addEventListener("webkitfullscreenchange", ()=> {
+        document.addEventListener("webkitfullscreenchange", () => {
             if (document['webkitIsFullScreen'] === true) {
                 this.fullscreenState = true;
                 this.containerEl.classList.add('fullscreen');
-                setTimeout(()=> {
+                setTimeout(() => {
                     this.videoEl.style.marginTop = (window.innerHeight - this.videoEl.offsetHeight) / 2 + 'px';
 
                     this.danmakuManager.resize();
@@ -196,7 +198,7 @@ export class Player extends EventBase {
                 this.contextMenu = null;
             });
         });
-        window.addEventListener('click', e=> {
+        window.addEventListener('click', e => {
             if (this.contextMenu && e.button == 0) {
                 this.contextMenu.dispose();
                 this.contextMenu = null;
@@ -223,6 +225,32 @@ export class Player extends EventBase {
 
     initVideo(src: string) {
         this.videoEl.src = src;
+    }
+
+    initHls(hlsUrl: string, isLive = true) {
+        if (!window['Hls']) {
+            console.log('Moe2Player requires hls.js to support http live streaming.');
+            return;
+        }
+        if (this.videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+            this.videoEl.src = hlsUrl;
+            this.videoEl.addEventListener('loadedmetadata', () => {
+            })
+        } else {
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(hlsUrl);
+                hls.attachMedia(this.videoEl);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                })
+            } else {
+                console.log('flv.js is not supported in current browser.');
+            }
+        }
+        this.isLive = isLive;
+        if (this.isLive) {
+            this.controlLayer.setliveMode()
+        }
     }
 
     initFlv(flvUrl: string) {
@@ -256,6 +284,9 @@ export class Player extends EventBase {
     }
 
     play() {
+        if (this.isLive) {
+            this.videoEl.currentTime = this.videoEl.seekable.end(0)
+        }
         this.videoEl.play()
     }
 
@@ -503,6 +534,9 @@ export class ProgressBar extends EventBase {
         })
     }
 
+    hide() {
+        this.element.hidden = true;
+    }
 
     getPageX(e) {
         if (this.touchMode) {
@@ -597,8 +631,12 @@ export class ControlLayer extends EventBase {
         this.moveEvent = touchMode ? 'touchmove' : 'mousemove';
         this.upEvent = touchMode ? 'touchend' : 'mouseup';
         this.player.addEventListener(PlayerEvent.ready, () => {
-            this.durationEl.innerHTML = '/' + this.parseTime(this.player.duration);
-            this.currentTimeEl.innerHTML = this.parseTime(this.player.currentTime)
+            if (this.player.isLive) {
+                this.currentTimeEl.innerHTML = '实时广播'
+            } else {
+                this.durationEl.innerHTML = '/' + this.parseTime(this.player.duration);
+                this.currentTimeEl.innerHTML = this.parseTime(this.player.currentTime)
+            }
         });
         this.player.addEventListener(PlayerEvent.timeupdate, this.updateTime.bind(this));
         this.progressBar.addEventListener(ProgressBarEvent.startSeek, () => {
@@ -698,6 +736,10 @@ export class ControlLayer extends EventBase {
         this.visible = false
     }
 
+    setliveMode() {
+        this.progressBar.hide();
+    }
+
     private parseTime(time: number): string {
         time = time || 0;
         time = Math.round(time);
@@ -731,11 +773,11 @@ export class ControlLayer extends EventBase {
         if (!isLive) {
             this.progressBar.currentValue = this.player.currentTime / this.player.duration;
             this.progressBar.bufferRange = this.player.bufferRange;
+            this.currentTimeEl.innerHTML = this.parseTime(this.player.currentTime)
         } else {
-            this.progressBar.currentValue = 0;
-            this.progressBar.bufferRange = [];
+            this.currentTimeEl.innerHTML = '实时广播'
         }
-        this.currentTimeEl.innerHTML = this.parseTime(this.player.currentTime)
+
     }
 
     tooglePlay(e) {
