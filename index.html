@@ -4,18 +4,25 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<script src="dist/moe2player.js"></script>
+
 <body style="margin: 0">
 
 <div class="player-container" style="height: 100vh">
-
 </div>
+<!--<script src="dist/moe2player.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/moe2-player@latest/dist/moe2player.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/socket.io-client@latest/dist/socket.io.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
-    let player=new moe2player.Player(document.querySelector('.player-container'),'实时广播');
-    player.initHls('http://127.0.0.1/hls/test.m3u8');
-    setInterval(()=>player.pushDanmaku('test'),1000)
+    var player = new moe2player.Player(document.querySelector('.player-container'), '实时广播');
+    player.initHls('http://10.0.0.211/hls/test.m3u8');
+    var socket = io.connect('http://127.0.0.1:8400');
+    player.addEventListener(moe2player.PlayerEvent.sendDanmaku, function (dmk) {
+        socket.send(dmk)
+    });
+    socket.on('dmk', function (dmk) {
+        player.pushDanmaku(dmk.content, dmk.color, dmk.type, dmk.fontSize)
+    })
 </script>
 </body>
-
 </html>

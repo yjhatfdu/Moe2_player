@@ -32,7 +32,8 @@ export enum PlayerEvent {
     exitfullscreen,
     seeking,
     seeked,
-    buffer
+    buffer,
+    sendDanmaku
 }
 
 
@@ -281,6 +282,11 @@ export class Player extends EventBase {
         const time = this.videoEl.currentTime + 0.1;
         const danmaku = new DanmakuItem(this.danmakuManager, content, time, type, color, fontSize);
         this.danmakuManager.sendDanmaku(danmaku);
+    }
+
+    sendDanmaku(content, color = '#ffffff', type = 0, fontSize = 28) {
+        const time = this.videoEl.currentTime + 0.1;
+        this.dispatchEvent(PlayerEvent.sendDanmaku, {time, content, color, type, fontSize})
     }
 
     play() {
@@ -626,6 +632,17 @@ export class ControlLayer extends EventBase {
         timeind.appendChild(this.currentTimeEl = createEle('span', 'current-time'));
         timeind.appendChild(this.durationEl = createEle('span', 'total-time'));
         this.controlPanelEl.appendChild(timeind);
+        let inputBar = document.createElement('form');
+        inputBar.innerHTML = '<input type="text"><button type="submit">发送</button>';
+        let dmkInput: any = inputBar.querySelector('input');
+        let sendButton = inputBar.querySelector('button');
+        inputBar.addEventListener('submit', e => {
+            e.preventDefault();
+            let value = dmkInput.value;
+            player.sendDanmaku(value);
+            dmkInput.value = '';
+        });
+        this.controlPanelEl.appendChild(inputBar);
         this.touchMode = touchMode;
         this.downEvent = touchMode ? 'touchstart' : 'mousedown';
         this.moveEvent = touchMode ? 'touchmove' : 'mousemove';

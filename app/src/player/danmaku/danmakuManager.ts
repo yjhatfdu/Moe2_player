@@ -177,9 +177,9 @@ export class DanmakuManager extends EventBase {
 
     sendDanmaku(content: DanmakuItem) {
         this.layoutManager.insert(content);
-        if (this.networkManager) {
-            this.networkManager.send(content);
-        }
+        // if (this.networkManager) {
+        //     this.networkManager.send(content);
+        // }
     }
 
     setInitialDanmakuList(list: Array<DanmakuItem>) {

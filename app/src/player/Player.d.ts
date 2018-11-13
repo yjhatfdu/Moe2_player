@@ -12,6 +12,7 @@ export declare enum PlayerEvent {
     seeking = 8,
     seeked = 9,
     buffer = 10,
+    sendDanmaku = 11,
 }
 export declare class Player extends EventBase {
     containerEl: HTMLElement;
@@ -37,6 +38,7 @@ export declare class Player extends EventBase {
     initFlv(flvUrl: string): void;
     loadDanmaku(src: any, type?: string): void;
     pushDanmaku(content: any, color?: string, type?: number, fontSize?: number): void;
+    sendDanmaku(content: any, color?: string, type?: number, fontSize?: number): void;
     play(): void;
     pause(): void;
     seek(time: any): void;

@@ -1,10 +1,9 @@
 {
   "name": "moe2-player",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "devDependencies": {
     "font-awesome": "^4.5.0",
     "ts-loader": "^5.3.0",
-    "typescript": "^1.8.0",
     "webpack-cli": "^3.1.2",
     "webpack": "^4.25.1",
     "base64-inline-loader": "^1.1.1",
@@ -12,11 +11,17 @@
     "style-loader": "^0.23.1"
   },
   "scripts": {
-    "build": "rm -rf dist&&tsc --outDir ./dist&&rm dist/**/*.js && rm dist/*.js && rm dist/*.map && rm dist/**/*.map&&webpack"
+    "build": "rm -rf dist&&tsc --outDir ./dist&&rm dist/**/*.js && rm dist/*.js && rm dist/*.map && rm dist/**/*.map&&webpack",
+    "server": "node app/dmkServer/index.js"
   },
   "dependencies": {
     "@types/hls.js": "^0.10.2",
-    "hls.js": "^0.11.0"
+    "hls.js": "^0.11.0",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1",
+    "ts-node": "^7.0.1",
+    "typescript": "^1.8.0"
   },
-  "main": "dist/moe2player.js"
+  "main": "dist/moe2player.js",
+  "bin": "app/dmkServer/index.js"
 }
