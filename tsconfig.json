@@ -3,10 +3,14 @@
     "target": "es5",
     "sourceMap": true,
     "removeComments": true,
-    "experimentalDecorators":true
+    "experimentalDecorators":true,
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "declaration": true
   },
   "exclude": [
     "node_modules",
-    "bower_components"
+    "build",
+    "dist"
   ]
 }

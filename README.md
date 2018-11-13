@@ -19,8 +19,7 @@
 - 引用dist目录下的script,style,images,fonts文件夹至工程目录
 - 在网页用引用js以及css
 ``` html
-<link rel="stylesheet" href="style/player.css">
-<script src="script/player.min.js"></script>
+<script src="dist/moe2player.js"></script>
 ```
 - 建一个容器来存放播放器，容器本身的大小和响应式行为会影响播放器的大小
 ``` html
@@ -29,7 +28,7 @@
 - 初始化播放器,
 ```html
 <script>
-var player=new Moe2.Player(document.querySelector('#player-container'),'可选的视频标题');
+var player=new moe2player.Player(document.querySelector('#player-container'),'可选的视频标题');
 player.initVideo('视频的路径.mp4');
 player.loadDanmaku('弹幕文件路径.xml','bilibili');
 </script>

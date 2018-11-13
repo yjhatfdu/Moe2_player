@@ -1,0 +1,33 @@
+import { DanmakuManager } from "./danmakuManager";
+import { DanmakuItem } from "./DanmakuItem";
+export declare class LayoutManager {
+    danmakuManager: DanmakuManager;
+    initialList: Array<DanmakuItem>;
+    appendList: Array<DanmakuItem>;
+    initialListRange: number[];
+    appendListRange: number[];
+    currentTime: number;
+    startTime: number;
+    videoStartTime: number;
+    rowCount: number;
+    rowTail: Array<DanmakuItem>;
+    staticRow: Array<DanmakuItem>;
+    lastSeekingTime: number;
+    lastSeekingDirectionRightForward: boolean;
+    isPlaying: boolean;
+    constructor(manager: DanmakuManager);
+    loadDanmakuList(dmkList: Array<DanmakuItem>): void;
+    loadDanmakuListQM(dmkList: Array<any>): void;
+    parseItemQM(dmk: any): DanmakuItem;
+    start(): void;
+    pause(): void;
+    seek(time?: any): void;
+    seeking(time: any): void;
+    insert(item: DanmakuItem): void;
+    resize(width: number, height: number): void;
+    getTime(): number;
+    arrange(item: DanmakuItem, currentTime: number): void;
+    getRange(list: Array<DanmakuItem>, currentTime: number, range: Array<number>): void;
+    updateListPosition(start: number, end: number, list: Array<DanmakuItem>, currentTime: number): void;
+    update(force?: boolean, time?: any): void;
+}

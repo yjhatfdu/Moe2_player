@@ -6,7 +6,7 @@ function getShaderText(id){
 }
 
 function getProgram(ctx,vShader,fShader){
-    var programObj=ctx.createProgram();
+    let programObj=ctx.createProgram();
     ctx.attachShader(programObj,vShader);
     ctx.attachShader(programObj,fShader);
     ctx.linkProgram(programObj);
@@ -18,13 +18,13 @@ function getProgram(ctx,vShader,fShader){
     }
 }
 function getProgramByShaderSource(ctx,vShader,fShader){
-   var vs=getShader(ctx,true,vShader);
-    var fs=getShader(ctx,false,fShader);
+   let vs=getShader(ctx,true,vShader);
+    let fs=getShader(ctx,false,fShader);
     return getProgram(ctx,vs,fs)
 }
 
 function getShader(ctx,isVshader,shaderText){
-    var newshader=isVshader?ctx.createShader(ctx.VERTEX_SHADER):ctx.createShader(ctx.FRAGMENT_SHADER);
+    let newshader=isVshader?ctx.createShader(ctx.VERTEX_SHADER):ctx.createShader(ctx.FRAGMENT_SHADER);
     ctx.shaderSource(newshader,shaderText);
     ctx.compileShader(newshader);
     if(ctx.getShaderParameter(newshader,ctx.COMPILE_STATUS)){
@@ -34,7 +34,7 @@ function getShader(ctx,isVshader,shaderText){
     }
 }
 function getVBO(ctx,data){
-    var vbo=ctx.createBuffer();
+    let vbo=ctx.createBuffer();
     ctx.bindBuffer(ctx.ARRAY_BUFFER,vbo);
     ctx.bufferData(ctx.ARRAY_BUFFER,new Float32Array(data),ctx.STATIC_DRAW);
     ctx.bindBuffer(ctx.ARRAY_BUFFER,null);
@@ -50,7 +50,7 @@ function getTextureByImgObject(webgl,imgObj,texindex){
     webgl.activeTexture(webgl.TEXTURE0+texindex);
 
 
-    var textureObject = webgl.createTexture();
+    let textureObject = webgl.createTexture();
     webgl.bindTexture(webgl.TEXTURE_2D, textureObject);
     webgl.texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, imgObj);
     webgl.generateMipmap(webgl.TEXTURE_2D);
@@ -66,7 +66,7 @@ function getTextureByImgObject(webgl,imgObj,texindex){
 }
 function create_ibo(gl,data){
     // 生成缓存对象
-    var ibo = gl.createBuffer();
+    let ibo = gl.createBuffer();
 
     // 绑定缓存
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
@@ -82,16 +82,16 @@ function create_ibo(gl,data){
 }
 
 function uniformController(glCtx,glProgram,uniformData){
-    var program=glProgram;
-    var data=uniformData;
-    for(var i in uniformData){
-        var item=uniformData[i];
+    let program=glProgram;
+    let data=uniformData;
+    for(let i in uniformData){
+        let item=uniformData[i];
         item.location=glCtx.getUniformLocation(program,i);
     }
     return{
         bindUniform:function(name,value){
-            var item=data[name];
-            var type=item.type;
+            let item=data[name];
+            let type=item.type;
             if (type=="Matrix3fv"||type=="Matrix4fv"){
                 glCtx["uniform"+type](item.location,false,value);
             }else{
@@ -103,8 +103,8 @@ function uniformController(glCtx,glProgram,uniformData){
 }
 function clone(myObj){
     if(typeof(myObj) != 'object' || myObj == null) return myObj;
-    var newObj = {};
-    for(var i in myObj){
+    let newObj = {};
+    for(let i in myObj){
         newObj[i] = clone(myObj[i]);
     }
     return newObj;
@@ -114,7 +114,7 @@ function  getUid(){
 }
 function getIBO(gl,data){
     // 生成缓存对象
-    var ibo = gl.createBuffer();
+    let ibo = gl.createBuffer();
 
     // 绑定缓存
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
@@ -130,18 +130,18 @@ function getIBO(gl,data){
 }
 
 function resizeGlTextureImg(imgobj,size=null){
-    var w=imgobj.width;
-    var h=imgobj.height;
-    var log2=Math['log2']|| function (value) {
+    let w=imgobj.width;
+    let h=imgobj.height;
+    let log2=Math['log2']|| function (value) {
           return Math.log(value)/Math.log(2)
         };
     if(!size){
         if(w==h&&(log2(w)%1==0)){
             return imgobj
         }else{
-            var canvas=document.createElement('canvas');
+            let canvas=document.createElement('canvas');
             canvas.width=canvas.height=size?size:Math.pow(2,Math.ceil(log2(Math.max(w,h))));
-            var ctx=canvas.getContext('2d');
+            let ctx=canvas.getContext('2d');
             ctx.drawImage(imgobj,0,0,imgobj.width,imgobj.height,0,0,canvas.width,canvas.height);
             return canvas
         }
