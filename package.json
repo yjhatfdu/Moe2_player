@@ -1,6 +1,6 @@
 {
   "name": "moe2-player",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "devDependencies": {
     "font-awesome": "^4.5.0",
     "ts-loader": "^5.3.0",

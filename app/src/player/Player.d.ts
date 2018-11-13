@@ -90,6 +90,7 @@ export declare class ControlLayer extends EventBase {
     private fullScreenIcon;
     private danmakuIconEl;
     private icon3DEl;
+    private dmkInput;
     private vrIconEl;
     private touchMode;
     private downEvent;
